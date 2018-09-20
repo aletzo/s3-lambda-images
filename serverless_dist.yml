@@ -50,7 +50,7 @@ functions:
       - http:
           path: list-images
           method: get
-  resizeImages:
+  resizeImage:
     handler: handler.resizeImage
     events:
       - http:

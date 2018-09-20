@@ -33,15 +33,23 @@ How to deploy
     serverless config credentials --provider aws --key AWS_KEY --secret AWS_SECRET
     ```
 
-3. Copy `serverless.yml_dist` to `serverless.yml` and adjust accordingly.
+3. Copy `serverless_dist.yml` to `serverless.yml` and adjust accordingly.
 
-4. Copy `config/serverless/environment/dev.yml_dist` to `config/serverless/environment/dev.yml` and adjust accordingly.
+4. Copy `config/serverless/environment/dev_dist.yml` to `config/serverless/environment/dev.yml` and adjust accordingly.
 
 5. Execute 
     ```
     serverless deploy
     ```
 
+
+Status
+------
+
+[OK] /delete-image
+[??] /fetch-image (probably wrong headers or wrond encoding)
+[OK] /list-images
+[??] /resize-image (Sharp node package is not supported in AWS Lambda - workaround required)
 
 
 Resources
@@ -51,3 +59,6 @@ Resources
 * https://iiaku.com/2017/06/06/aws-lambda-part-ii-how-to-create-zip-from-files/
 * https://github.com/amazon-archives/serverless-image-resizing
 * https://medium.freecodecamp.org/express-js-and-aws-lambda-a-serverless-love-story-7c77ba0eaa35
+
+
+
