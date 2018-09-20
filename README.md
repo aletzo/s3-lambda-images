@@ -67,8 +67,8 @@ Status
 Tips
 ----
 
-# `sls` is a shortcut for `serverless`. So you can use `sls deploy` instead of `serverless deploy` etc.
-# In case of local development, consider installing `nodemon` (`npm i -g nodemon`) to make the development process easier (using `nodemon app.js` will restart the server every time a file changes).
+* `sls` is a shortcut for `serverless`. So you can use `sls deploy` instead of `serverless deploy` etc.
+* In case of local development, consider installing `nodemon` (`npm i -g nodemon`) to make the development process easier (using `nodemon app.js` will restart the server every time a file changes).
 
 
 
