@@ -37,21 +37,28 @@ How to deploy
 
 4. Copy `config/serverless/environment/dev_dist.yml` to `config/serverless/environment/dev.yml` and adjust accordingly.
 
-5. Execute 
+5. Execute build node_modules in an AWS Lambda env with Docker:
+    ```
+    docker run --rm -v "$PWD":/var/task lambci/lambda:build-nodejs6.10
+    ```
+
+6. Execute 
     ```
     serverless deploy
     ```
+
+7. Make sure that the environment variables (BUCKET, AWS_KEY, AWS_SECRET) exist at https://console.aws.amazon.com/lambda/home?region=YOUR_REGION#/functions/YOUR_LAMBDA_FUNCTION
 
 
 Status
 ------
 
-| Endpoint      | Status  | comment                                                                  |
-| ------------- | ------- | ------------------------------------------------------------------------ |
-| /delete-image | Done    |                                                                          |
-| /fetch-image  | Done    |                                                                          |
-| /list-images  | Done    |                                                                          |
-| /resize-image | Pending | Sharp node package is not supported in AWS Lambda - workaround required) |
+| Endpoint      | Status  | comment                                                                 |
+| ------------- | ------- | ----------------------------------------------------------------------- |
+| /delete-image | Done    |                                                                         |
+| /fetch-image  | Done    |                                                                         |
+| /list-images  | Done    |                                                                         |
+| /resize-image | Pending | Sharp node package is not supported in AWS Lambda - workaround required |
 
 
 Resources
