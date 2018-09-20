@@ -46,12 +46,12 @@ How to deploy
 Status
 ------
 
-| Endpoint       | Status  | comment                                                                  |
-| -------------- | ------- | ------------------------------------------------------------------------ |
-| /delete-image  | Done    |                                                                          |
-| /fetch-image   | Pending | probably wrong headers or wrong encoding                                 |
-| /list-images   | Done    |                                                                          |
-| /resize-image  | Pending | Sharp node package is not supported in AWS Lambda - workaround required) |
+| Endpoint      | Status  | comment                                                                  |
+| ------------- | ------- | ------------------------------------------------------------------------ |
+| /delete-image | Done    |                                                                          |
+| /fetch-image  | Done    |                                                                          |
+| /list-images  | Done    |                                                                          |
+| /resize-image | Pending | Sharp node package is not supported in AWS Lambda - workaround required) |
 
 
 Resources

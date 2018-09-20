@@ -11,7 +11,7 @@ const displayStatus = () => ({
 });
 
 app.get('/delete-image', (req, res) => {
-    const imageHandler = new ImageHandler(process.env.BUCKET);
+    const imageHandler = new ImageHandler(process.env.BUCKET, process.env.AWS_KEY, process.env.AWS_SECRET);
     const fileName = req.query && req.query.f;
 
     return imageHandler
@@ -26,7 +26,7 @@ app.get('/delete-image', (req, res) => {
 });
 
 app.get('/fetch-image', (req, res) => {
-    const imageHandler = new ImageHandler(process.env.BUCKET);
+    const imageHandler = new ImageHandler(process.env.BUCKET, process.env.AWS_KEY, process.env.AWS_SECRET);
     const fileName = req.query && req.query.f;
 
     return imageHandler
@@ -47,7 +47,7 @@ app.get('/fetch-image', (req, res) => {
 });
 
 app.get('/list-images', (req, res) => {
-    const imageHandler = new ImageHandler(process.env.BUCKET);
+    const imageHandler = new ImageHandler(process.env.BUCKET, process.env.AWS_KEY, process.env.AWS_SECRET);
 
     return imageHandler
         .listImages()
@@ -97,7 +97,7 @@ app.get('/list-images', (req, res) => {
 });
 
 app.get('/resize-image', (req, res) => {
-    const imageHandler = new ImageHandler(process.env.BUCKET);
+    const imageHandler = new ImageHandler(process.env.BUCKET, process.env.AWS_KEY, process.env.AWS_SECRET);
     const fileName = req.query && req.query.f;
     const height   = req.query && req.query.h;
     const width    = req.query && req.query.w;

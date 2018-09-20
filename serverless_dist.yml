@@ -10,6 +10,9 @@ custom:
   service: ${file(./config/serverless/environment/${self:custom.stage}.yml):custom.service}
   awsAccount: ${file(./config/serverless/environment/${self:custom.stage}.yml):custom.awsAccount}
   vpc: ${file(./config/serverless/environment/${self:custom.stage}.yml):vpc}
+  apigwBinary:
+    types:
+      - '*/*'
 
 provider:
   name: aws
@@ -29,6 +32,10 @@ provider:
     product: ${self:custom.product}
     project: ${self:custom.service}
     environment: ${self:custom.stage}
+
+plugins:
+  - serverless-apigw-binary
+  - serverless-apigwy-binary
 
 functions:
   deleteImage:
@@ -56,4 +63,4 @@ functions:
       - http:
           path: resize-image
           method: get
-
+          contentHandling: CONVERT_TO_BINARY
