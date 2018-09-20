@@ -5,8 +5,8 @@ This is just a proof of concept of handling images using S3 + Lambda + serverles
 
 
 
-How to install
---------------
+How to install for local development
+------------------------------------
 
 1. Install the required node modules:
     ```
@@ -37,17 +37,18 @@ How to deploy
 
 4. Copy `config/serverless/environment/dev_dist.yml` to `config/serverless/environment/dev.yml` and adjust accordingly.
 
-5. Execute build node_modules in an AWS Lambda env with Docker:
+5. Build node_modules using an AWS Lambda environment with Docker (some packages like Sharp require compiled files in an environment similar to AWS Lambda):
     ```
     docker run --rm -v "$PWD":/var/task lambci/lambda:build-nodejs6.10
     ```
 
-6. Execute 
+6. Deploy: 
     ```
     serverless deploy
     ```
 
-7. Make sure that the environment variables (BUCKET, AWS_KEY, AWS_SECRET) exist at https://console.aws.amazon.com/lambda/home?region=YOUR_REGION#/functions/YOUR_LAMBDA_FUNCTION
+7. Make sure that the environment variables (`BUCKET`, `AWS_KEY` and `AWS_SECRET`) exist at https://console.aws.amazon.com/lambda/home?region=YOUR_REGION#/functions/YOUR_LAMBDA_FUNCTION
+
 
 
 Status
@@ -59,6 +60,26 @@ Status
 | /fetch-image  | Done    |          |
 | /list-images  | Done    |          |
 | /resize-image | Done    |          |
+| /zip          | Pending | Pending  |
+
+
+
+Tips
+----
+
+# `sls` is a shortcut for `serverless`. So you can use `sls deploy` instead of `serverless deploy` etc.
+# In case of local development, consider installing `nodemon` (`npm i -g nodemon`) to make the development process easier (using `nodemon app.js` will restart the server every time a file changes).
+
+
+
+Troubleshooting
+---------------
+
+In case you face problems you can try one of the followings:
+
+* Make sure the two config files exist and contain the correct values.
+* If already deployed code stopped working right after a deploy, try to remove (`sls remove`) and re-deploy. In that case remember to create the environment variables again (`BUCKET`, `AWS_KEY` and `AWS_SECRET`)
+
 
 
 Resources
