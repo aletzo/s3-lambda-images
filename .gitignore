@@ -1,3 +1,5 @@
 .DS_Store
+.serverless/*
 node_modules/*
+config/serverless/environment/dev.yml
 serverless.yml

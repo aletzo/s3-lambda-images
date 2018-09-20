@@ -1,0 +1,32 @@
+
+# Custom variables
+custom:
+    awsAccount: HERE
+    business: HERE
+    team: HERE
+    product: HERE
+    project: HERE
+    service: HERE
+
+# S3 deployment bucket
+deploymentBucket:
+  name: HERE
+  serverSideEncryption: AES256
+
+# Common tags
+tags:
+  business: ${self:custom.business}
+  team: ${self:custom.team}
+  product: ${self:custom.product}
+  project: ${self:custom.project}
+  environment: ${self:custom.stage}
+
+# Lambda configuration
+vpc:
+  securityGroupIds:
+    - HERE
+  subnetIds:
+    - HERE
+    - HERE
+    - HERE
+

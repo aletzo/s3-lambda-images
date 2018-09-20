@@ -1,59 +1,59 @@
-service: serverless-images
+service: ${self:custom.team}-${self:custom.product}-${self:custom.service}
+
 custom:
-  apigwBinary:
-    types:
-      - '*/*'
+  stage: ${opt:stage, self:provider.stage}
+  region: ${opt:region, self:provider.region}
+  business: ${file(./config/serverless/environment/${self:custom.stage}.yml):custom.business}
+  team: ${file(./config/serverless/environment/${self:custom.stage}.yml):custom.team}
+  product: ${file(./config/serverless/environment/${self:custom.stage}.yml):custom.product}
+  project: ${file(./config/serverless/environment/${self:custom.stage}.yml):custom.project}
+  service: ${file(./config/serverless/environment/${self:custom.stage}.yml):custom.service}
+  awsAccount: ${file(./config/serverless/environment/${self:custom.stage}.yml):custom.awsAccount}
+  vpc: ${file(./config/serverless/environment/${self:custom.stage}.yml):vpc}
+
 provider:
   name: aws
+  stage: ${opt:stage, 'dev'}
+  region: ${opt:region, 'us-east-1'}
   runtime: nodejs6.10
-  stage: dev
-  region: us-east-1
-  timeout: 5 # optional, in seconds, default is 6
-  role: ImageRenderingRole
-environment:
-  BUCKET: AWS_BUCKET_NAME
-plugins:
-  - serverless-apigw-binary
-  - serverless-apigwy-binary
+  memorySize: 128
+  logRetentionInDays: 7
+  timeout: 10
+  cfLogs: true
+  deploymentBucket:
+    name: HERE
+    serverSideEncryption: AES256
+  tags:
+    business: ${self:custom.business}
+    team: ${self:custom.team}
+    product: ${self:custom.product}
+    project: ${self:custom.service}
+    environment: ${self:custom.stage}
+
 functions:
+  deleteImage:
+    handler: handler.deleteImage
+    events:
+      - http:
+          path: delete-image
+          method: get
   fetchImage:
-   handler: handler.fetchImage
-   events:
-     - http:
-       path: fetch-image
-       method: get
-       contentHandling: CONVERT_TO_BINARY
-  resizeImage:
-   handler: handler.resizeImage
-   events:
-     - http:
-       path: resize-image
-       method: get
-       contentHandling: CONVERT_TO_BINARY
-resources:
-  Resources:
-    ImageRenderingRole:
-      Type: AWS::IAM::Role
-      Properties:
-        RoleName: ${self:service}-S3-ACCESS
-        AssumeRolePolicyDocument:
-        Version: "2012-10-17"
-        Statement:
-          - Effect: Allow
-            Principal:
-              Service:
-                - lambda.amazonaws.com
-            Action: sts:AssumeRole
-      Policies:
-        - PolicyName: ${self:service}-s3-access
-          PolicyDocument:
-            Version: "2012-10-17"
-            Statement:
-              - Effect: Allow
-                Action:
-                  - "s3:DeleteObject"
-                  - "s3:GetObject"
-                  - "s3:ListObjects"
-                  - "s3:PutObject"
-                Resource:
-                  - 'arn:aws:s3:::${self:provider.environment.BUCKET}/*'
+    handler: handler.fetchImage
+    events:
+      - http:
+          path: fetch-image
+          method: get
+          contentHandling: CONVERT_TO_BINARY
+  listImages:
+    handler: handler.listImages
+    events:
+      - http:
+          path: list-images
+          method: get
+  resizeImages:
+    handler: handler.resizeImage
+    events:
+      - http:
+          path: resize-image
+          method: get
+

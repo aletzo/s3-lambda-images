@@ -33,9 +33,11 @@ How to deploy
     serverless config credentials --provider aws --key AWS_KEY --secret AWS_SECRET
     ```
 
-3. Copy `serverless.yml_dist` to `serverless.yml` and adjust accordingly
+3. Copy `serverless.yml_dist` to `serverless.yml` and adjust accordingly.
 
-4. Execute 
+4. Copy `config/serverless/environment/dev.yml_dist` to `config/serverless/environment/dev.yml` and adjust accordingly.
+
+5. Execute 
     ```
     serverless deploy
     ```
@@ -45,6 +47,7 @@ How to deploy
 Resources
 ---------
 
-https://read.acloud.guru/serverless-image-optimization-and-delivery-510b6c311fe5
-https://iiaku.com/2017/06/06/aws-lambda-part-ii-how-to-create-zip-from-files/
-https://github.com/amazon-archives/serverless-image-resizing
+* https://read.acloud.guru/serverless-image-optimization-and-delivery-510b6c311fe5
+* https://iiaku.com/2017/06/06/aws-lambda-part-ii-how-to-create-zip-from-files/
+* https://github.com/amazon-archives/serverless-image-resizing
+* https://medium.freecodecamp.org/express-js-and-aws-lambda-a-serverless-love-story-7c77ba0eaa35
