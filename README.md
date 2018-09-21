@@ -15,7 +15,7 @@ How to install for local development
 
 2. Start the app (replace AWS_BUCKET_NAME accordingly):
     ```
-    BUCKET=AWS_BUCKET_NAME node app.js
+    BUCKET=YOUR_AWS_BUCKET_NAME AWS_KEY=YOUR_AWS_KEY AWS_SECRET=YOUR_AWS_SECRET node app.js
     ```
 
 
@@ -78,7 +78,7 @@ Troubleshooting
 In case you face problems you can try one of the followings:
 
 * Make sure the two config files exist and contain the correct values.
-* If already deployed code stopped working right after a deploy, try to remove (`sls remove`) and re-deploy. In that case remember to create the environment variables again (`BUCKET`, `AWS_KEY` and `AWS_SECRET`)
+* If already deployed code stopped working right after a deploy, try to remove (`sls remove`) and re-deploy. In that case remember to create the environment variables again (`BUCKET`, `AWS_KEY` and `AWS_SECRET`).
 
 
 
@@ -87,6 +87,7 @@ Resources
 
 * https://read.acloud.guru/serverless-image-optimization-and-delivery-510b6c311fe5
 * https://iiaku.com/2017/06/06/aws-lambda-part-ii-how-to-create-zip-from-files/
+* https://github.com/iiAku/zip-aws-lambda
 * https://github.com/amazon-archives/serverless-image-resizing
 * https://medium.freecodecamp.org/express-js-and-aws-lambda-a-serverless-love-story-7c77ba0eaa35
 
