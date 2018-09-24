@@ -5,7 +5,11 @@ module.exports.deleteImage = (event, context, callback) => {
     const params   = event.queryStringParameters;
     const fileName = params && params.f;
 
-    const imageHandler = new ImageHandler(process.env.BUCKET, process.env.AWS_KEY, process.env.AWS_SECRET);
+    const imageHandler = new ImageHandler(
+        process.env.BUCKET,
+        process.env.AWS_KEY,
+        process.env.AWS_SECRET
+    );
 
     return imageHandler
         .deleteImage(fileName)
@@ -23,7 +27,11 @@ module.exports.deleteImage = (event, context, callback) => {
 }
 
 module.exports.listImages = (event, context, callback) => {
-    const imageHandler = new ImageHandler(process.env.BUCKET, process.env.AWS_KEY, process.env.AWS_SECRET);
+    const imageHandler = new ImageHandler(
+        process.env.BUCKET,
+        process.env.AWS_KEY,
+        process.env.AWS_SECRET
+    );
 
     return imageHandler
         .listImages()
@@ -81,7 +89,11 @@ module.exports.fetchImage = (event, context, callback) => {
     const params   = event.queryStringParameters;
     const fileName = params && params.f;
 
-    const imageHandler = new ImageHandler(process.env.BUCKET, process.env.AWS_KEY, process.env.AWS_SECRET);
+    const imageHandler = new ImageHandler(
+        process.env.BUCKET,
+        process.env.AWS_KEY,
+        process.env.AWS_SECRET
+    );
 
     return imageHandler
         .fetchImage(fileName)
@@ -107,7 +119,11 @@ module.exports.resizeImage = (event, context, callback) => {
     const height   = params && params.h;
     const width    = params && params.w;
 
-    const imageHandler = new ImageHandler(process.env.BUCKET, process.env.AWS_KEY, process.env.AWS_SECRET);
+    const imageHandler = new ImageHandler(
+        process.env.BUCKET,
+        process.env.AWS_KEY,
+        process.env.AWS_SECRET
+    );
 
     return imageHandler
         .fetchImageResized(fileName, parseInt(height), parseInt(width))
@@ -154,8 +170,17 @@ module.exports.zipImage = (event, context, callback) => {
 }
 
 module.exports.zipImages = (event, context, callback) => {
-    const imageHandler = new ImageHandler(process.env.BUCKET, process.env.AWS_KEY, process.env.AWS_SECRET);
-    const zipHandler   = new ZipHandler  (process.env.BUCKET, process.env.AWS_KEY, process.env.AWS_SECRET);
+    const imageHandler = new ImageHandler(
+        process.env.BUCKET,
+        process.env.AWS_KEY,
+        process.env.AWS_SECRET
+    );
+
+    const zipHandler = new ZipHandler(
+        process.env.BUCKET,
+        process.env.AWS_KEY,
+        process.env.AWS_SECRET
+    );
 
     const images = imageHandler.listImages();
 

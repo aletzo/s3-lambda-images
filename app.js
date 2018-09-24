@@ -12,8 +12,13 @@ const displayStatus = () => ({
 });
 
 app.get('/delete-image', (req, res) => {
-    const imageHandler = new ImageHandler(process.env.BUCKET, process.env.AWS_KEY, process.env.AWS_SECRET);
     const fileName = req.query && req.query.f;
+
+    const imageHandler = new ImageHandler(
+        process.env.BUCKET,
+        process.env.AWS_KEY,
+        process.env.AWS_SECRET
+    );
 
     return imageHandler
         .deleteImage(fileName)
@@ -27,8 +32,13 @@ app.get('/delete-image', (req, res) => {
 });
 
 app.get('/fetch-image', (req, res) => {
-    const imageHandler = new ImageHandler(process.env.BUCKET, process.env.AWS_KEY, process.env.AWS_SECRET);
     const fileName = req.query && req.query.f;
+
+    const imageHandler = new ImageHandler(
+        process.env.BUCKET,
+        process.env.AWS_KEY,
+        process.env.AWS_SECRET
+    );
 
     return imageHandler
         .fetchImage(fileName)
@@ -48,7 +58,11 @@ app.get('/fetch-image', (req, res) => {
 });
 
 app.get('/list-images', (req, res) => {
-    const imageHandler = new ImageHandler(process.env.BUCKET, process.env.AWS_KEY, process.env.AWS_SECRET);
+    const imageHandler = new ImageHandler(
+        process.env.BUCKET,
+        process.env.AWS_KEY,
+        process.env.AWS_SECRET
+    );
 
     return imageHandler
         .listImages()
@@ -99,10 +113,15 @@ app.get('/list-images', (req, res) => {
 });
 
 app.get('/resize-image', (req, res) => {
-    const imageHandler = new ImageHandler(process.env.BUCKET, process.env.AWS_KEY, process.env.AWS_SECRET);
     const fileName = req.query && req.query.f;
     const height   = req.query && req.query.h;
     const width    = req.query && req.query.w;
+
+    const imageHandler = new ImageHandler(
+        process.env.BUCKET,
+        process.env.AWS_KEY,
+        process.env.AWS_SECRET
+    );
 
     return imageHandler
         .fetchImageResized(fileName, parseInt(height), parseInt(width))
@@ -129,7 +148,11 @@ app.get('/status', (req, res) => {
 app.get('/zip-image', (req, res) => {
     const fileName = req.query && req.query.f;
 
-    const zipHandler = new ZipHandler(process.env.BUCKET, process.env.AWS_KEY, process.env.AWS_SECRET);
+    const zipHandler = new ZipHandler(
+        process.env.BUCKET,
+        process.env.AWS_KEY,
+        process.env.AWS_SECRET
+    );
 
     return zipHandler.zipImage(fileName)
         .then(data => {
