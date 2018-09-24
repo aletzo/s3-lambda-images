@@ -37,7 +37,7 @@ How to deploy
 
 4. Copy `config/serverless/environment/dev_dist.yml` to `config/serverless/environment/dev.yml` and adjust accordingly.
 
-5. Build node_modules using an AWS Lambda environment with Docker (some packages like Sharp require compiled files in an environment similar to AWS Lambda):
+5. Build node_modules using an AWS Lambda environment with Docker (some packages like Sharp require compiled files in an environment similar to AWS Lambda - by executing this command, the local version will stop working, so in order to make it work locally again you have to delete node_modules and `npm install`):
     ```
     docker run --rm -v "$PWD":/var/task lambci/lambda:build-nodejs6.10
     ```
@@ -60,7 +60,8 @@ Status
 | /fetch-image  | Done    |          |
 | /list-images  | Done    |          |
 | /resize-image | Done    |          |
-| /zip          | Pending | Pending  |
+| /zip-image    | Done    |          |
+| /zip-images   | Done    |          |
 
 
 
@@ -69,6 +70,7 @@ Tips
 
 * `sls` is a shortcut for `serverless`. So you can use `sls deploy` instead of `serverless deploy` etc.
 * In case of local development, consider installing `nodemon` (`npm i -g nodemon`) to make the development process easier (using `nodemon app.js` will restart the server every time a file changes).
+* When adding new routes/functions remember to create the environment variables (`BUCKET`, `AWS_KEY` and `AWS_SECRET`).
 
 
 

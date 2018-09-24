@@ -50,11 +50,14 @@ module.exports.listImages = (event, context, callback) => {
                     html += `
                         <li>
                             <a href="fetch-image?f=${object.Key}">${object.Key}</a>
+                            |
                             resize: 
                             <a href="resize-image?f=${object.Key}&h=100&w=100">100x100</a>
                             <a href="resize-image?f=${object.Key}&h=200&w=200">200x200</a>
                             <a href="resize-image?f=${object.Key}&h=1000&w=1000">1000x1000</a>
-                            <a href="zip-image?f=${object.Key}">delete</a>
+                            |
+                            <a href="zip-image?f=${object.Key}">zip</a>
+                            |
                             <a href="delete-image?f=${object.Key}">delete</a>
                         </li>
                     `;
