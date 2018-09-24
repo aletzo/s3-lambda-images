@@ -129,14 +129,14 @@ app.get('/status', (req, res) => {
 app.get('/zip-image', (req, res) => {
     const fileName = req.query && req.query.f;
 
-    const zipHandler = new ZipHandler  (process.env.BUCKET, process.env.AWS_KEY, process.env.AWS_SECRET);
+    const zipHandler = new ZipHandler(process.env.BUCKET, process.env.AWS_KEY, process.env.AWS_SECRET);
 
     return zipHandler.zipImage(fileName)
         .then(data => {
             const zip = new Buffer(data.zip, 'base64');
 
             res.writeHead(200, {
-                'Content-Disposition' : `attachment; filename="${fileName}.gz"`,
+                'Content-Disposition' : `attachment; filename="${fileName}.zip"`,
                 'Content-Type'        : data.contentType
             });
 

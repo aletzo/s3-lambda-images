@@ -131,9 +131,7 @@ module.exports.zipImage = (event, context, callback) => {
     const params   = event.queryStringParameters;
     const fileName = params && params.f;
 
-    const zipHandler   = new ZipHandler  (process.env.BUCKET, process.env.AWS_KEY, process.env.AWS_SECRET);
-
-    const image = imageHandler.fetchImage(fileName);
+    const zipHandler = new ZipHandler(process.env.BUCKET, process.env.AWS_KEY, process.env.AWS_SECRET);
 
     return zipHandler.zipImage(fileName)
         .then(data => {
@@ -142,7 +140,7 @@ module.exports.zipImage = (event, context, callback) => {
             callback(null, {
                 statusCode: 200,
                 headers: { 
-                    'Content-Disposition' : `attachment; filename="${fileName}.gz"`,
+                    'Content-Disposition' : `attachment; filename="${fileName}.zip"`,
                     'Content-Type'        : data.contentType 
                 },
                 body: zip.toString('base64'),
