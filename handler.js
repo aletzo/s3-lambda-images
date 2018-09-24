@@ -131,19 +131,20 @@ module.exports.zipImage = (event, context, callback) => {
     const params   = event.queryStringParameters;
     const fileName = params && params.f;
 
-    const imageHandler = new ImageHandler(process.env.BUCKET, process.env.AWS_KEY, process.env.AWS_SECRET);
     const zipHandler   = new ZipHandler  (process.env.BUCKET, process.env.AWS_KEY, process.env.AWS_SECRET);
 
     const image = imageHandler.fetchImage(fileName);
 
-    return zipHandler
-        .zipImage(image)
+    return zipHandler.zipImage(fileName)
         .then(data => {
             const zip = new Buffer(data.zip, 'base64');
 
             callback(null, {
                 statusCode: 200,
-                headers: { 'Content-Type': data.contentType },
+                headers: { 
+                    'Content-Disposition' : `attachment; filename="${fileName}.gz"`,
+                    'Content-Type'        : data.contentType 
+                },
                 body: zip.toString('base64'),
                 isBase64Encoded: true,
             });
@@ -153,6 +154,7 @@ module.exports.zipImage = (event, context, callback) => {
             callback(null, error);
         });
 }
+
 module.exports.zipImages = (event, context, callback) => {
     const imageHandler = new ImageHandler(process.env.BUCKET, process.env.AWS_KEY, process.env.AWS_SECRET);
     const zipHandler   = new ZipHandler  (process.env.BUCKET, process.env.AWS_KEY, process.env.AWS_SECRET);
