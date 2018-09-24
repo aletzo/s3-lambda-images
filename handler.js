@@ -182,16 +182,18 @@ module.exports.zipImages = (event, context, callback) => {
         process.env.AWS_SECRET
     );
 
-    const images = imageHandler.listImages();
-
-    return zipHandler
-        .zipImages(images)
+    return imageHandler
+        .listImages()
+        .then(data => zipHandler.zipImages(data.objects))
         .then(data => {
             const zip = new Buffer(data.zip, 'base64');
 
             callback(null, {
                 statusCode: 200,
-                headers: { 'Content-Type': data.contentType },
+                headers: { 
+                    'Content-Disposition' : `attachment; filename="images.zip"`,
+                    'Content-Type'        : data.contentType 
+                },
                 body: zip.toString('base64'),
                 isBase64Encoded: true,
             });
