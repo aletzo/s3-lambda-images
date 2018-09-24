@@ -64,3 +64,17 @@ functions:
           path: resize-image
           method: get
           contentHandling: CONVERT_TO_BINARY
+  zipImage:
+    handler: handler.zipImage
+    events:
+      - http:
+          path: zip-image
+          method: get
+          contentHandling: CONVERT_TO_BINARY
+  zipImages:
+    handler: handler.zipImages
+    events:
+      - http:
+          path: zip-images
+          method: get
+          contentHandling: CONVERT_TO_BINARY

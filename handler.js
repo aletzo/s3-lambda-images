@@ -1,4 +1,5 @@
 const ImageHandler = require('./lib/image-handler');
+const ZipHandler   = require('./lib/zip-handler');
 
 module.exports.deleteImage = (event, context, callback) => {
     const params   = event.queryStringParameters;
@@ -45,6 +46,7 @@ module.exports.listImages = (event, context, callback) => {
                             <a href="resize-image?f=${object.Key}&h=100&w=100">100x100</a>
                             <a href="resize-image?f=${object.Key}&h=200&w=200">200x200</a>
                             <a href="resize-image?f=${object.Key}&h=1000&w=1000">1000x1000</a>
+                            <a href="zip-image?f=${object.Key}">delete</a>
                             <a href="delete-image?f=${object.Key}">delete</a>
                         </li>
                     `;
@@ -57,7 +59,7 @@ module.exports.listImages = (event, context, callback) => {
                     <br>
                     <br>
 
-                    <a href="zip">Zip them!</a>
+                    <a href="zip-images">Zip them!</a>
                     `;
             } else {
                 html +=  `nope :(`;
@@ -116,6 +118,56 @@ module.exports.resizeImage = (event, context, callback) => {
                 statusCode: 200,
                 headers: { 'Content-Type': data.contentType },
                 body: img.toString('base64'),
+                isBase64Encoded: true,
+            });
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            callback(null, error);
+        });
+}
+
+module.exports.zipImage = (event, context, callback) => {
+    const params   = event.queryStringParameters;
+    const fileName = params && params.f;
+
+    const imageHandler = new ImageHandler(process.env.BUCKET, process.env.AWS_KEY, process.env.AWS_SECRET);
+    const zipHandler   = new ZipHandler  (process.env.BUCKET, process.env.AWS_KEY, process.env.AWS_SECRET);
+
+    const image = imageHandler.fetchImage(fileName);
+
+    return zipHandler
+        .zipImage(image)
+        .then(data => {
+            const zip = new Buffer(data.zip, 'base64');
+
+            callback(null, {
+                statusCode: 200,
+                headers: { 'Content-Type': data.contentType },
+                body: zip.toString('base64'),
+                isBase64Encoded: true,
+            });
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            callback(null, error);
+        });
+}
+module.exports.zipImages = (event, context, callback) => {
+    const imageHandler = new ImageHandler(process.env.BUCKET, process.env.AWS_KEY, process.env.AWS_SECRET);
+    const zipHandler   = new ZipHandler  (process.env.BUCKET, process.env.AWS_KEY, process.env.AWS_SECRET);
+
+    const images = imageHandler.listImages();
+
+    return zipHandler
+        .zipImages(images)
+        .then(data => {
+            const zip = new Buffer(data.zip, 'base64');
+
+            callback(null, {
+                statusCode: 200,
+                headers: { 'Content-Type': data.contentType },
+                body: zip.toString('base64'),
                 isBase64Encoded: true,
             });
         })

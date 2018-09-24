@@ -8,12 +8,15 @@
   },
   "author": "",
   "license": "ISC",
-  "devDependencies": {
-    "body-parser": "^1.18.3",
-    "express": "^4.16.3"
-  },
   "dependencies": {
+    "archiver": "^3.0.0",
+    "aws-sdk": "^2.319.0",
+    "body-parser": "^1.18.3",
+    "express": "^4.16.3",
+    "pump": "^3.0.0",
+    "s3-upload-stream": "^1.0.7",
     "serverless-apigw-binary": "^0.4.4",
-    "serverless-apigwy-binary": "^0.1.0"
+    "serverless-apigwy-binary": "^0.1.0",
+    "sharp": "^0.20.8"
   }
 }
