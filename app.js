@@ -171,6 +171,38 @@ app.get('/zip-image', (req, res) => {
         });
 });
 
+app.get('/zip-images', (req, res) => {
+    const imageHandler = new ImageHandler(
+        process.env.BUCKET,
+        process.env.AWS_KEY,
+        process.env.AWS_SECRET
+    );
+
+    const zipHandler = new ZipHandler(
+        process.env.BUCKET,
+        process.env.AWS_KEY,
+        process.env.AWS_SECRET
+    );
+
+    return imageHandler
+        .listImages()
+        .then(data => zipHandler.zipImages(data.objects))
+        .then(data => {
+            const zip = new Buffer(data.zip, 'base64');
+
+            res.writeHead(200, {
+                'Content-Disposition' : `attachment; filename="images.zip"`,
+                'Content-Type'        : data.contentType
+            });
+
+            res.end(zip);
+        })
+        .catch(error => {
+            console.error(error);
+            res.status(400).send(error.message || error);
+        });
+});
+
 app.get('/zip', (req, res) => {
     res.status(200).send('yes ok');
 });
