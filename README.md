@@ -54,14 +54,15 @@ How to deploy
 Status
 ------
 
-| Endpoint      | Status  | Comment  |
-| ------------- | ------- | -------- |
-| /delete-image | Done    |          |
-| /fetch-image  | Done    |          |
-| /list-images  | Done    |          |
-| /resize-image | Done    |          |
-| /zip-image    | Done    |          |
-| /zip-images   | Done    |          |
+| Endpoint      | Status  | Comment          |
+| ------------- | ------- | ---------------- |
+| /add-images   | Pending | Work in progress |
+| /delete-image | Done    |                  |
+| /fetch-image  | Done    |                  |
+| /list-images  | Done    |                  |
+| /resize-image | Done    |                  |
+| /zip-image    | Done    |                  |
+| /zip-images   | Done    |                  |
 
 
 
@@ -81,6 +82,42 @@ In case you face problems you can try one of the followings:
 
 * Make sure the two config files exist and contain the correct values.
 * If already deployed code stopped working right after a deploy, try to remove (`sls remove`) and re-deploy. In that case remember to create the environment variables again (`BUCKET`, `AWS_KEY` and `AWS_SECRET`).
+
+
+
+Coding Style
+------------
+
+Just follow the default guidelines from http://standardjs.com.
+
+If you want to automate your code formatting and be able to detect unused and deprecated code:
+
+1. Install `standard` globally:
+    ```
+    npm install -g standard
+    ```
+
+2. Execute this periodically:
+    ```
+    standard --fix
+    ```
+
+3. Add this in the pre-commit hook:
+    ```
+    # Ensure all JavaScript files staged for commit pass standard code style
+    function xargs-r() {
+    # Portable version of "xargs -r". The -r flag is a GNU extension that
+    # prevents xargs from running if there are no input files.
+    if IFS= read -r -d $'\n' path; then
+        { echo "$path"; cat; } | xargs $@
+    fi
+    }
+    git diff --name-only --cached --relative | grep '\.jsx\?$' | sed 's/[^[:alnum:]]/\\&/g' | xargs-r -E '' -t standard
+    if [[ $? -ne 0 ]]; then
+    echo 'JavaScript Standard Style errors were detected. Aborting commit.'
+    exit 1
+    fi
+    ```
 
 
 

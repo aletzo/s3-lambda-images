@@ -38,6 +38,12 @@ plugins:
   - serverless-apigwy-binary
 
 functions:
+  addImages:
+    handler: handler.addImages
+    events:
+      - http:
+          path: add-images
+          method: get
   deleteImage:
     handler: handler.deleteImage
     events:

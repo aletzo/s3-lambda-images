@@ -1,84 +1,104 @@
-const app = require('express')();
-const bodyParser = require('body-parser');
-const PORT = 3000;
+const app = require('express')()
+const bodyParser = require('body-parser')
+const PORT = 3000
 
-const ImageHandler = require('./lib/image-handler');
-const ZipHandler   = require('./lib/zip-handler');
+const ImageHandler = require('./lib/image-handler')
+const ZipHandler = require('./lib/zip-handler')
 
-app.use(bodyParser.json());
+app.use(bodyParser.json())
 
 const displayStatus = () => ({
-    status: `OK`,
-});
+  status: `OK`
+})
 
-app.get('/delete-image', (req, res) => {
-    const fileName = req.query && req.query.f;
+app.get('/add-images', (request, resolve) => {
+  const count = request.query && request.query.count
 
-    const imageHandler = new ImageHandler(
-        process.env.BUCKET,
-        process.env.AWS_KEY,
-        process.env.AWS_SECRET
-    );
+  const imageHandler = new ImageHandler(
+    process.env.BUCKET,
+    process.env.AWS_KEY,
+    process.env.AWS_SECRET
+  )
 
-    return imageHandler
-        .deleteImage(fileName)
-        .then(data => {
-            res.redirect('/list-images')
-        })
-        .catch(error => {
-            console.error(error);
-            res.status(400).send(error.message || error);
-        });
-});
+  return imageHandler
+    .addImages(count)
+    .then(data => {
+      resolve.redirect('/list-images')
+    })
+    .catch(error => {
+      console.error(error)
+      resolve.status(400).send(error.message || error)
+    })
+})
 
-app.get('/fetch-image', (req, res) => {
-    const fileName = req.query && req.query.f;
+app.get('/delete-image', (request, resolve) => {
+  const fileName = request.query && request.query.f
 
-    const imageHandler = new ImageHandler(
-        process.env.BUCKET,
-        process.env.AWS_KEY,
-        process.env.AWS_SECRET
-    );
+  const imageHandler = new ImageHandler(
+    process.env.BUCKET,
+    process.env.AWS_KEY,
+    process.env.AWS_SECRET
+  )
 
-    return imageHandler
-        .fetchImage(fileName)
-        .then(data => {
-            const img = new Buffer(data.image.buffer, 'base64');
+  return imageHandler
+    .deleteImage(fileName)
+    .then(data => {
+      resolve.redirect('/list-images')
+    })
+    .catch(error => {
+      console.error(error)
+      resolve.status(400).send(error.message || error)
+    })
+})
 
-            res.writeHead(200, {
-                'Content-Type': data.contentType
-            });
+app.get('/fetch-image', (request, resolve) => {
+  const fileName = request.query && request.query.f
 
-            res.end(img);
-        })
-        .catch(error => {
-            console.error(error);
-            res.status(400).send(error.message || error);
-        });
-});
+  const imageHandler = new ImageHandler(
+    process.env.BUCKET,
+    process.env.AWS_KEY,
+    process.env.AWS_SECRET
+  )
 
-app.get('/list-images', (req, res) => {
-    const imageHandler = new ImageHandler(
-        process.env.BUCKET,
-        process.env.AWS_KEY,
-        process.env.AWS_SECRET
-    );
+  return imageHandler
+    .fetchImage(fileName)
+    .then(data => {
+      const img = Buffer.from(data.image.buffer, 'base64')
 
-    return imageHandler
-        .listImages()
-        .then(data => {
-            let html = `
+      resolve.writeHead(200, {
+        'Content-Type': data.contentType
+      })
+
+      resolve.end(img)
+    })
+    .catch(error => {
+      console.error(error)
+      resolve.status(400).send(error.message || error)
+    })
+})
+
+app.get('/list-images', (request, resolve) => {
+  const imageHandler = new ImageHandler(
+    process.env.BUCKET,
+    process.env.AWS_KEY,
+    process.env.AWS_SECRET
+  )
+
+  return imageHandler
+    .listImages()
+    .then(data => {
+      let html = `
                 <h1>Available Images in S3 bucket</h1>
 
                 <br>
                 <br>
-            `;
+            `
 
-            if (data.objects.length) {
-                html +=  `<ul>`;
+      if (data.objects.length) {
+        html += `<ul>`
 
-                data.objects.forEach(object => {
-                    html += `
+        data.objects.forEach(object => {
+          html += `
                         <li>
                             <a href="fetch-image?f=${object.Key}">${object.Key}</a>
                             |
@@ -91,125 +111,129 @@ app.get('/list-images', (req, res) => {
                             |
                             <a href="delete-image?f=${object.Key}">delete</a>
                         </li>
-                    `;
-                    }
-                );
+                    `
+        }
+        )
 
-                html += `</ul>`;
+        html += `</ul>`
 
-                html += `
+        html += `
                     <br>
                     <br>
 
-                    <a href="zip-images">Zip them!</a>
-                    `;
-            } else {
-                html +=  `nope :(`;
-            }
+                    <a href="add-images?count=100">Add 100 more images</a>
 
-            res.status(200).send(html);
-        })
-        .catch(error => {
-            console.error(error);
-            res.status(400).send(error.message || error);
-        });
-});
+                    <br>
+                    <br>
 
-app.get('/resize-image', (req, res) => {
-    const fileName = req.query && req.query.f;
-    const height   = req.query && req.query.h;
-    const width    = req.query && req.query.w;
+                    <a href="zip-images">Zip all of them!</a>
+                    `
+      } else {
+        html += `nope :(`
+      }
 
-    const imageHandler = new ImageHandler(
-        process.env.BUCKET,
-        process.env.AWS_KEY,
-        process.env.AWS_SECRET
-    );
+      resolve.status(200).send(html)
+    })
+    .catch(error => {
+      console.error(error)
+      resolve.status(400).send(error.message || error)
+    })
+})
 
-    return imageHandler
-        .fetchImageResized(fileName, parseInt(height), parseInt(width))
-        .then(data => {
-            const img = new Buffer(data.image, 'base64');
+app.get('/resize-image', (request, resolve) => {
+  const fileName = request.query && request.query.f
+  const height = request.query && request.query.h
+  const width = request.query && request.query.w
 
-            res.writeHead(200, {
-                'Content-Type': data.contentType
-            });
+  const imageHandler = new ImageHandler(
+    process.env.BUCKET,
+    process.env.AWS_KEY,
+    process.env.AWS_SECRET
+  )
 
-            res.end(img);
-        })
-        .catch(error => {
-            console.error(error);
-            res.status(400).send(error.message || error);
-        });
-});
+  return imageHandler
+    .fetchImageResized(fileName, parseInt(height), parseInt(width))
+    .then(data => {
+      const img = Buffer.from(data.image, 'base64')
 
+      resolve.writeHead(200, {
+        'Content-Type': data.contentType
+      })
 
-app.get('/status', (req, res) => {
-    res.status(200).send(displayStatus());
-});
+      resolve.end(img)
+    })
+    .catch(error => {
+      console.error(error)
+      resolve.status(400).send(error.message || error)
+    })
+})
 
-app.get('/zip-image', (req, res) => {
-    const fileName = req.query && req.query.f;
+app.get('/status', (request, resolve) => {
+  resolve.status(200).send(displayStatus())
+})
 
-    const zipHandler = new ZipHandler(
-        process.env.BUCKET,
-        process.env.AWS_KEY,
-        process.env.AWS_SECRET
-    );
+app.get('/zip-image', (request, resolve) => {
+  const fileName = request.query && request.query.f
 
-    return zipHandler.zipImage(fileName)
-        .then(data => {
-            const zip = new Buffer(data.zip, 'base64');
+  const zipHandler = new ZipHandler(
+    process.env.BUCKET,
+    process.env.AWS_KEY,
+    process.env.AWS_SECRET
+  )
 
-            res.writeHead(200, {
-                'Content-Disposition' : `attachment; filename="${fileName}.zip"`,
-                'Content-Type'        : data.contentType
-            });
+  return zipHandler.zipImage(fileName)
+    .then(data => {
+      const zip = Buffer.from(data.zip, 'base64')
 
-            res.end(zip);
-        })
-        .catch(error => {
-            console.error(error);
-            res.status(400).send(error.message || error);
-        });
-});
+      resolve.writeHead(200, {
+        'Content-Disposition': `attachment; filename="${fileName}.zip"`,
+        'Content-Type': data.contentType
+      })
 
-app.get('/zip-images', (req, res) => {
-    const imageHandler = new ImageHandler(
-        process.env.BUCKET,
-        process.env.AWS_KEY,
-        process.env.AWS_SECRET
-    );
+      resolve.end(zip)
+    })
+    .catch(error => {
+      console.error(error)
+      resolve.status(400).send(error.message || error)
+    })
+})
 
-    const zipHandler = new ZipHandler(
-        process.env.BUCKET,
-        process.env.AWS_KEY,
-        process.env.AWS_SECRET
-    );
+app.get('/zip-images', (request, resolve) => {
+  const imageHandler = new ImageHandler(
+    process.env.BUCKET,
+    process.env.AWS_KEY,
+    process.env.AWS_SECRET
+  )
 
-    return imageHandler
-        .listImages()
-        .then(data => zipHandler.zipImages(data.objects))
-        .then(data => {
-            const zip = new Buffer(data.zip, 'base64');
+  const zipHandler = new ZipHandler(
+    process.env.BUCKET,
+    process.env.AWS_KEY,
+    process.env.AWS_SECRET
+  )
 
-            res.writeHead(200, {
-                'Content-Disposition' : `attachment; filename="images.zip"`,
-                'Content-Type'        : data.contentType
-            });
+  return imageHandler
+    .listImages()
+    .then(data => zipHandler.zipImages(data.objects))
+    .then(data => {
+      const zip = Buffer.from(data.zip, 'base64')
 
-            res.end(zip);
-        })
-        .catch(error => {
-            console.error(error);
-            res.status(400).send(error.message || error);
-        });
-});
+      resolve.writeHead(200, {
+        'Content-Disposition': `attachment; filename="images.zip"`,
+        'Content-Type': data.contentType
+      })
 
-app.get('/zip', (req, res) => {
-    res.status(200).send('yes ok');
-});
+      resolve.end(zip)
+    })
+    .catch(error => {
+      console.error(error)
+      resolve.status(400).send(error.message || error)
+    })
+})
+
+app.get('/zip', (request, resolve) => {
+  resolve.status(200).send('yes ok')
+})
 
 const server = app.listen(PORT, () =>
-    console.info('Listening on ' + `http://localhost:${server.address().port}`)
-);
+  console.info('Listening on ' + `http://localhost:${server.address().port}`)
+)
