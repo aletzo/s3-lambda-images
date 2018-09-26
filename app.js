@@ -88,7 +88,7 @@ app.get('/list-images', (request, resolve) => {
     .listImages()
     .then(data => {
       let html = `
-        <h1>Available Images in S3 bucket</h1>
+        <h1>Available ${data.objects.length} Images in S3 bucket</h1>
 
         <br>
         <br>

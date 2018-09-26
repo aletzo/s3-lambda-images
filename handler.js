@@ -1,6 +1,31 @@
 const ImageHandler = require('./lib/image-handler')
 const ZipHandler = require('./lib/zip-handler')
 
+module.exports.addImages = (event, context, callback) => {
+  const params = event.queryStringParameters
+  const count = params && params.count
+
+  const imageHandler = new ImageHandler(
+    process.env.BUCKET,
+    process.env.AWS_KEY,
+    process.env.AWS_SECRET
+  )
+
+  return imageHandler
+    .addImages(count)
+    .then(data => {
+      callback(null, {
+        body: 'add images done!',
+        headers: { 'Content-Type': 'text/html' },
+        statusCode: 200
+      })
+    })
+    .catch(error => {
+      console.error('Error:', error)
+      callback(null, error)
+    })
+}
+
 module.exports.deleteImage = (event, context, callback) => {
   const params = event.queryStringParameters
   const fileName = params && params.f
@@ -37,7 +62,7 @@ module.exports.listImages = (event, context, callback) => {
     .listImages()
     .then(data => {
       let html = `
-        <h1>Available Images in S3 bucket</h1>
+        <h1>Available ${data.objects.length} Images in S3 bucket</h1>
 
         <br>
         <br>
@@ -51,7 +76,7 @@ module.exports.listImages = (event, context, callback) => {
       `
 
       if (data.objects.length) {
-        html += `<ul>`
+        html += `<ol>`
 
         data.objects.forEach(object => {
           html += `
@@ -70,7 +95,7 @@ module.exports.listImages = (event, context, callback) => {
             `
         })
 
-        html += `</ul>`
+        html += `</ol>`
       } else {
         html += `nope :(`
       }
