@@ -88,46 +88,40 @@ app.get('/list-images', (request, resolve) => {
     .listImages()
     .then(data => {
       let html = `
-                <h1>Available Images in S3 bucket</h1>
+        <h1>Available Images in S3 bucket</h1>
 
-                <br>
-                <br>
-            `
+        <br>
+        <br>
+
+        <a href="add-images?count=100">Add 100 more images</a>
+        |
+        <a href="zip-images">Zip'em all</a>
+
+        <br>
+        <br>
+      `
 
       if (data.objects.length) {
-        html += `<ul>`
+        html += `<ol>`
 
         data.objects.forEach(object => {
           html += `
-                        <li>
-                            <a href="fetch-image?f=${object.Key}">${object.Key}</a>
-                            |
-                            resize: 
-                            <a href="resize-image?f=${object.Key}&h=100&w=100">100x100</a>
-                            <a href="resize-image?f=${object.Key}&h=200&w=200">200x200</a>
-                            <a href="resize-image?f=${object.Key}&h=1000&w=1000">1000x1000</a>
-                            |
-                            <a href="zip-image?f=${object.Key}">zip</a>
-                            |
-                            <a href="delete-image?f=${object.Key}">delete</a>
-                        </li>
-                    `
-        }
-        )
+            <li>
+                <a href="fetch-image?f=${object.Key}">${object.Key}</a>
+                |
+                resize: 
+                <a href="resize-image?f=${object.Key}&h=100&w=100">100x100</a>
+                <a href="resize-image?f=${object.Key}&h=200&w=200">200x200</a>
+                <a href="resize-image?f=${object.Key}&h=1000&w=1000">1000x1000</a>
+                |
+                <a href="zip-image?f=${object.Key}">zip</a>
+                |
+                <a href="delete-image?f=${object.Key}">delete</a>
+            </li>
+          `
+        })
 
-        html += `</ul>`
-
-        html += `
-                    <br>
-                    <br>
-
-                    <a href="add-images?count=100">Add 100 more images</a>
-
-                    <br>
-                    <br>
-
-                    <a href="zip-images">Zip all of them!</a>
-                    `
+        html += `</ol>`
       } else {
         html += `nope :(`
       }

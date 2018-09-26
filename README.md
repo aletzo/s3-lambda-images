@@ -13,7 +13,7 @@ How to install for local development
     npm install
     ```
 
-2. Start the app (replace AWS_BUCKET_NAME accordingly):
+2. Start the app (replace `YOUR_AWS_*` accordingly):
     ```
     BUCKET=YOUR_AWS_BUCKET_NAME AWS_KEY=YOUR_AWS_KEY AWS_SECRET=YOUR_AWS_SECRET node app.js
     ```
