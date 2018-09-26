@@ -54,15 +54,15 @@ How to deploy
 Status
 ------
 
-| Endpoint      | Status  | Comment          |
-| ------------- | ------- | ---------------- |
-| /add-images   | Pending | Work in progress |
-| /delete-image | Done    |                  |
-| /fetch-image  | Done    |                  |
-| /list-images  | Done    |                  |
-| /resize-image | Done    |                  |
-| /zip-image    | Done    |                  |
-| /zip-images   | Done    |                  |
+| Endpoint      | Status  | Comment |
+| ------------- | ------- | ------- |
+| /add-images   | Done    |         |
+| /delete-image | Done    |         |
+| /fetch-image  | Done    |         |
+| /list-images  | Done    |         |
+| /resize-image | Done    |         |
+| /zip-image    | Done    |         |
+| /zip-images   | Done    |         |
 
 
 
